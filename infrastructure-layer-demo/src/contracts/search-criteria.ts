@@ -42,20 +42,3 @@ export interface CategorySearchCriteria {
     /** Partial name search */
     name?: string;
 }
-
-/**
- * Comment search criteria
- */
-export interface CommentSearchCriteria {
-    /** Filter by todo ID */
-    todoId?: number;
-
-    /** Filter by author */
-    authorName?: string;
-
-    /** Search from this date (inclusive) */
-    fromDate?: Date;
-
-    /** Search to this date (inclusive) */
-    toDate?: Date;
-}

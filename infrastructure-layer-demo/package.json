@@ -34,7 +34,7 @@
         "@types/pg": "^8.15.2",
         "benchmark": "^2.1.4",
         "pg": "^8.16.0",
-        "rawsql-ts": "^0.10.0-beta",
+        "rawsql-ts": "file:../../rawsql-ts",
         "tsx": "^4.0.0"
     },
     "devDependencies": {

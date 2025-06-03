@@ -1,4 +1,4 @@
-import { TodoSearchCriteria, CategorySearchCriteria, CommentSearchCriteria } from '../contracts/search-criteria';
+import { TodoSearchCriteria, CategorySearchCriteria } from '../contracts/search-criteria';
 
 /**
  * Example domain criteria for demonstration (updated for 1:N relationships)
@@ -56,14 +56,4 @@ export const exampleCategorySearchCriteria: CategorySearchCriteria[] = [
     {},
     { name: 'Work' },
     { name: 'Personal' }
-];
-
-/**
- * Example comment search criteria
- */
-export const exampleCommentSearchCriteria: CommentSearchCriteria[] = [
-    {},
-    { todoId: 1 },
-    { authorName: 'Alice Johnson' },
-    { fromDate: new Date('2025-05-28') }
 ];
