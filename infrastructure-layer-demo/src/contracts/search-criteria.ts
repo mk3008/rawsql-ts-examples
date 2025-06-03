@@ -34,11 +34,3 @@ export interface TodoSearchCriteria {
     /** Search to this date (inclusive) */
     toDate?: Date;
 }
-
-/**
- * Category search criteria
- */
-export interface CategorySearchCriteria {
-    /** Partial name search */
-    name?: string;
-}

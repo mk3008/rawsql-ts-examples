@@ -1,4 +1,4 @@
-import { TodoSearchCriteria, CategorySearchCriteria } from '../contracts/search-criteria';
+import { TodoSearchCriteria } from '../contracts/search-criteria';
 
 /**
  * Example domain criteria for demonstration (updated for 1:N relationships)
@@ -47,13 +47,4 @@ export const exampleCriteria: TodoSearchCriteria[] = [
         priority: 'high',
         status: 'pending'
     }
-];
-
-/**
- * Example category search criteria
- */
-export const exampleCategorySearchCriteria: CategorySearchCriteria[] = [
-    {},
-    { name: 'Work' },
-    { name: 'Personal' }
 ];

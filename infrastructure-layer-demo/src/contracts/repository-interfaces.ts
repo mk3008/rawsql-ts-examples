@@ -4,7 +4,7 @@
  */
 
 import { TodoSearchCriteria } from './search-criteria';
-import { Todo, TodoDetail, TodoTableView } from '../domain/entities';
+import { TodoDetail, TodoTableView } from '../domain/entities';
 
 /**
  * Repository interface for Todo domain operations (Query-focused for demonstration)

@@ -38,7 +38,9 @@ export class PrismaTodoRepository implements ITodoRepository {
         }
 
         this.debugLog('🔧 Prisma client initialized with enhanced logging');
-    }    /**
+    }
+
+    /**
      * Setup Prisma query event logging to capture actual SQL
      */
     private setupQueryLogging(): void {
@@ -78,7 +80,9 @@ export class PrismaTodoRepository implements ITodoRepository {
             console.log(message);
             if (data !== undefined) console.log(data);
         }
-    }    /**
+    }
+
+    /**
      * Convert domain criteria to Prisma where clause with advanced type safety
      * Demonstrates Prisma's automatic SQL injection protection and type-safe query building
      */
@@ -140,7 +144,9 @@ export class PrismaTodoRepository implements ITodoRepository {
 
         this.debugLog('🔄 Generated Prisma where clause:', JSON.stringify(whereClause, null, 2));
         return whereClause;
-    }    // === Core Repository Methods ===
+    }
+
+    // === Core Repository Methods ===
 
     /**
      * Find todos matching search criteria - optimized for table display
@@ -193,7 +199,9 @@ export class PrismaTodoRepository implements ITodoRepository {
                 ),
                 queryComplexity: Object.keys(whereClause).length,
                 resultCount: todos.length
-            });            // Map to TodoTableView for optimized table display
+            });
+
+            // Map to TodoTableView for optimized table display
             return todos.map((todo, index) => {
                 try {
                     return this.mapPrismaToTodoTableView(todo);
@@ -222,7 +230,9 @@ export class PrismaTodoRepository implements ITodoRepository {
 
             throw new Error(`Unexpected error in findByCriteria: ${String(error)}`);
         }
-    }    /**
+    }
+
+    /**
      * Count todos matching search criteria
      * Prisma approach: Built-in count aggregation
      */
@@ -258,7 +268,9 @@ export class PrismaTodoRepository implements ITodoRepository {
             const todoId = parseInt(id, 10);
             if (isNaN(todoId)) {
                 throw new Error('Invalid todo ID format');
-            } const todo = await this.executeWithLogging(
+            }
+
+            const todo = await this.executeWithLogging(
                 () => this.prisma.todo.findUnique({
                     where: {
                         todo_id: todoId
@@ -318,23 +330,6 @@ export class PrismaTodoRepository implements ITodoRepository {
     }
 
     // === Private Helper Methods ===
-
-    /**
-     * Map Prisma Todo result to domain Todo entity
-     * Prisma returns database field names directly, so minimal mapping needed
-     */
-    private mapPrismaToTodo(prismaResult: any): Todo {
-        return {
-            todo_id: prismaResult.todo_id,
-            title: prismaResult.title,
-            description: prismaResult.description,
-            status: prismaResult.status as TodoStatus,
-            priority: prismaResult.priority as TodoPriority,
-            categoryId: prismaResult.category_id,
-            createdAt: prismaResult.created_at,
-            updatedAt: prismaResult.updated_at
-        };
-    }
 
     /**
      * Map Prisma detailed result to domain TodoDetail entity
