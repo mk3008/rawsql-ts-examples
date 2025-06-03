@@ -1,0 +1,34 @@
+{
+    "name": "basic-examples",
+    "version": "1.0.0",
+    "description": "Basic usage examples for rawsql-ts",
+    "type": "module",
+    "scripts": {
+        "start": "tsx src/index.ts",
+        "demo:appendJoin": "tsx src/appendJoin/index.ts",
+        "demo:appendWhere": "tsx src/appendWhere/index.ts",
+        "demo:asyncUnion": "tsx src/asyncUnion/index.ts",
+        "demo:collector": "tsx src/collector/index.ts",
+        "demo:formatter": "tsx src/formatter/index.ts",
+        "demo:paramInjector": "tsx src/paramInjector/simple-demo.ts",
+        "test": "echo \"No tests yet\"",
+        "build": "tsc",
+        "switch:dev": "npm install rawsql-ts@file:../../rawsql-ts",
+        "switch:stable": "npm install rawsql-ts@^0.10.0-beta"
+    },
+    "keywords": [
+        "rawsql-ts",
+        "examples",
+        "basic"
+    ],
+    "author": "MSugiura",
+    "license": "MIT",
+    "dependencies": {
+        "rawsql-ts": "^0.10.0-beta",
+        "tsx": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    }
+}

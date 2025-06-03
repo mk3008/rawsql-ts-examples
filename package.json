@@ -1,0 +1,32 @@
+﻿{
+  "name": "rawsql-ts-examples",
+  "version": "1.0.0",
+  "description": "Real-world examples and demos for rawsql-ts library",
+  "private": true,
+  "workspaces": [
+    "infrastructure-layer-demo",
+    "performance-benchmarks",
+    "basic-examples"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "demo:infrastructure": "npm run start --workspace=infrastructure-layer-demo",
+    "benchmark": "npm run benchmark --workspace=performance-benchmarks"
+  },
+  "keywords": [
+    "rawsql-ts",
+    "examples",
+    "demo",
+    "sql",
+    "typescript"
+  ],
+  "author": "MSugiura",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mk3008/rawsql-ts-examples.git"
+  },
+  "homepage": "https://github.com/mk3008/rawsql-ts-examples#readme"
+}
