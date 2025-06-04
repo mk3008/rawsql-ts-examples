@@ -168,7 +168,7 @@ export class RawSQLTodoRepository implements ITodoRepository {
      * Build search query using SqlParamInjector (demo utility)
      */
     public buildSearchQuery(criteria: TodoSearchCriteria): QueryBuildResult {
-        const baseSql = sqlLoader.getQuery('findTodos');
+        const baseSql = sqlLoader.getQuery('findTodos') as string;
 
         const searchState = this.convertToSearchState(criteria);
         this.debugLog('🔄 Search state conversion:', searchState);
