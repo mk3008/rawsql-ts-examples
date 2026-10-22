@@ -24,11 +24,11 @@
     "author": "MSugiura",
     "license": "MIT",
     "dependencies": {
-        "rawsql-ts": "^0.10.0-beta",
+        "rawsql-ts": "0.10.0-beta",
         "tsx": "^4.0.0"
     },
     "devDependencies": {
-        "@types/node": "^20.0.0",
+        "@types/node": "^22.19.0",
         "typescript": "^5.0.0"
     }
 }

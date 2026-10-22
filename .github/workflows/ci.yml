@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.23.4', '24.22.1']
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            infrastructure-layer-demo/package-lock.json
+      - run: npm ci --ignore-scripts --registry=https://registry.npmjs.org/
+      - run: npm audit --audit-level=low --registry=https://registry.npmjs.org/
+      - run: npm audit --workspaces=false --package-lock-only --audit-level=low --registry=https://registry.npmjs.org/
+        working-directory: infrastructure-layer-demo
+      - name: Generate Prisma client explicitly (no database writes)
+        run: npm run prisma:generate --workspace=infrastructure-layer-demo
+        env:
+          DATABASE_URL: postgresql://sample:sample@localhost:5432/sample
+      - run: npm run build
+      - run: npm test
+        if: ${{ !cancelled() }}
+      - run: npm run demo:appendJoin --workspace=basic-examples
+        if: ${{ !cancelled() }}

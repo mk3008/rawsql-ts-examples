@@ -34,14 +34,14 @@
         "@types/pg": "^8.15.2",
         "benchmark": "^2.1.4",
         "pg": "^8.16.0",
-        "rawsql-ts": "file:../../rawsql-ts",
+        "rawsql-ts": "0.10.0-beta",
         "tsx": "^4.0.0"
     },
     "devDependencies": {
-        "@types/node": "^20.0.0",
-        "@vitest/ui": "^3.1.4",
+        "@types/node": "^22.19.0",
+        "@vitest/ui": "^4.1.12",
         "prisma": "^5.22.0",
         "typescript": "^5.0.0",
-        "vitest": "^3.1.4"
+        "vitest": "^4.1.12"
     }
 }
