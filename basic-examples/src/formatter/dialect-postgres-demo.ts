@@ -3,37 +3,37 @@
 // 2. Run the following command:
 //    npx ts-node demo/formatter/dialect-postgres-demo.ts
 
-import { SelectQueryParser, Formatter } from 'rawsql-ts';
+import { SelectQueryParser, SqlFormatter } from 'rawsql-ts';
 
 const sql = `select "user_id", "name" from "users" where "active" = :active`;
 const query = SelectQueryParser.parse(sql);
 
 // Default formatting
-const defaultFormatter = new Formatter();
-const defaultFormattedSql = defaultFormatter.format(query);
+const defaultFormatter = new SqlFormatter();
+const defaultFormattedSql = defaultFormatter.format(query).formattedSql;
 console.log('Default   :', defaultFormattedSql);
 // => select "user_id", "name" from "users" where "active" = :active
 
 // MySQL formatting
-const mysqlFormatter = new Formatter();
-const mysqlFormattedSql = mysqlFormatter.format(query, Formatter.PRESETS.mysql);
+const mysqlFormatter = new SqlFormatter({ preset: 'mysql' });
+const mysqlFormattedSql = mysqlFormatter.format(query).formattedSql;
 console.log('MySQL     :', mysqlFormattedSql);
 // => select `user_id`, `name` from `users` where `active` = ?
 
 // PostgreSQL formatting
-const postgresFormatter = new Formatter();
-const postgresFormattedSql = postgresFormatter.format(query, Formatter.PRESETS.postgres);
+const postgresFormatter = new SqlFormatter({ preset: 'postgres' });
+const postgresFormattedSql = postgresFormatter.format(query).formattedSql;
 console.log('PostgreSQL:', postgresFormattedSql);
 // => select "user_id", "name" from "users" where "active" = :active
 
 // SQL Server formatting
-const sqlServerFormatter = new Formatter();
-const sqlServerFormattedSql = sqlServerFormatter.format(query, Formatter.PRESETS.sqlserver);
+const sqlServerFormatter = new SqlFormatter({ preset: 'sqlserver' });
+const sqlServerFormattedSql = sqlServerFormatter.format(query).formattedSql;
 console.log('SQL Server:', sqlServerFormattedSql);
 // => select [user_id], [name] from [users] where [active] = @active
 
 // SQLite formatting
-const sqliteFormatter = new Formatter();
-const sqliteFormattedSql = sqliteFormatter.format(query, Formatter.PRESETS.sqlite);
+const sqliteFormatter = new SqlFormatter({ preset: 'sqlite' });
+const sqliteFormattedSql = sqliteFormatter.format(query).formattedSql;
 console.log('SQLite    :', sqliteFormattedSql);
-// => select "user_id", "name" from "users" where "active" = @active
+// => select "user_id", "name" from "users" where "active" = :active

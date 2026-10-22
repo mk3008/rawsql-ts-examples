@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { RawSQLTodoRepository } from '../../infrastructure/rawsql-infrastructure';
-import { SelectQueryParser, SqlSchemaValidator } from '../../../../../dist'; // Import from parent rawsql-ts
+import { SelectQueryParser, SqlSchemaValidator } from 'rawsql-ts';
 import { schemaManager } from '../../infrastructure/schema-definitions';
 
 // Debug-friendly SQL formatting for testing (consistent with dynamic-sql-generation.test.ts)
@@ -40,7 +40,7 @@ const debugSqlStyle = {
  *    - Can be extended to test multiple search patterns and edge cases
  * 
  * 3. **Domain Schema Transformation Validation** 
- *    - Tests PostgresJsonQueryBuilder functionality in isolation
+ *    - Tests PostgreSQL JSON projection functionality in isolation
  *    - Ensures complex JOIN results can be properly transformed to domain objects
  *    - Validates JSON aggregation produces expected nested structure
  *    - Guarantees function return types match expected domain schema
@@ -179,11 +179,7 @@ order by
         select
             *
             , case
-                when "category_id" is null
-                and "category_name" is null
-                and "category_description" is null
-                and "category_color" is null
-                and "category_created_at" is null then
+                when "category_id" is null and "category_name" is null and "category_description" is null and "category_color" is null and "category_created_at" is null then
                     null
                 else
                     jsonb_build_object('category_id', "category_id", 'name', "category_name", 'description', "category_description", 'color', "category_color", 'created_at', "category_created_at")

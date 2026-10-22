@@ -26,7 +26,7 @@ npm run switch:dev
 ```
 
 ### System Requirements
-- Node.js 18 or higher
+- Node.js 22.23.4 or 24.22.1
 
 ### Installation
 

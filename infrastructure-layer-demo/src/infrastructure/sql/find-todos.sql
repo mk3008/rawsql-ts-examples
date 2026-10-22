@@ -1,7 +1,7 @@
--- Find all todos with category information (PostgresJsonQueryBuilder compatible)
+-- Find all todos with category information (PostgreSQL JSON projection compatible)
 -- Used in: findByCriteria, buildSearchQuery
 -- Note: WHERE clause is dynamically injected by SqlParamInjector based on search criteria
--- Note: This query is processed by PostgresJsonQueryBuilder for JSON aggregation
+-- Note: This query is processed by PostgreSQL JSON projection for JSON aggregation
 
 SELECT 
     t.todo_id, t.title, t.description, t.status, t.priority,

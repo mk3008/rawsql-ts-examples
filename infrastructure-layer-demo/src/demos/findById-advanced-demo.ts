@@ -5,7 +5,7 @@ import { exampleCriteria } from './example-data';
 
 /**
  * Advanced FindById Query Demo
- * Comprehensive testing of SqlParamInjector + PostgresJsonQueryBuilder integration
+ * Comprehensive testing of SqlParamInjector + PostgreSQL JSON projection integration
  * Focuses on complex query scenarios, error handling, and search criteria patterns
  */
 
@@ -45,7 +45,7 @@ async function runAdvancedFindByIdDemo() {
 
             console.log('🎯 Key Features Demonstrated:');
             console.log('   • SqlParamInjector: Automatic WHERE clause generation');
-            console.log('   • PostgresJsonQueryBuilder: Hierarchical JSON structure');
+            console.log('   • PostgreSQL JSON projection: Hierarchical JSON structure');
             console.log('   • Single query: Todo + Category + Comments');
             console.log('   • Type-safe result: TodoDetail interface\n');
         } else {

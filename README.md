@@ -70,7 +70,7 @@ npm run demo:findById
 
 ## Prerequisites
 
-- Node.js 18 or higher
+- Node.js 22.23.4 or 24.22.1 (the CI versions)
 - For development version: rawsql-ts source code repository
 
 ## Contributing
@@ -81,3 +81,23 @@ Examples are extracted from the main rawsql-ts repository to provide focused dem
 2. Include comprehensive documentation
 3. Test with both stable and development versions
 4. Follow the established directory structure
+
+## Validation
+
+The default examples use the published `rawsql-ts@0.30.1`; no sibling checkout is required.
+Install with `npm ci --ignore-scripts`, then explicitly generate Prisma types with
+`npm run prisma:generate --workspace=infrastructure-layer-demo` before `npm run build`.
+`npm test` checks complete generated SQL, parameter boundaries, schema consistency,
+and the four formatter dialect presets.
+
+For a real PostgreSQL check, set `DATABASE_URL` and run
+`npm run test:database --workspace=infrastructure-layer-demo`. The check creates an
+isolated schema inside a transaction and rolls back its tables and seed data.
+CI runs this check on PostgreSQL 17 with Node 22 and 24.
+
+JSON list/detail results, nested categories, and comment arrays remain supported.
+The removed JSON builder and schema `jsonAlias` metadata are replaced by explicit
+sample SQL in `infrastructure-layer-demo/src/infrastructure/sql/todo-*-json.sql`.
+The parameterized query AST is inserted into the `origin_query` CTE without
+interpolating user input or losing its bound values. Physical schema validation
+continues to use the current `SchemaManager` and `SqlSchemaValidator` APIs.

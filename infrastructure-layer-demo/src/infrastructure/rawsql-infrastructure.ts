@@ -1,8 +1,8 @@
-import { SqlParamInjector, SqlFormatter, SelectQueryParser, PostgresJsonQueryBuilder, QueryBuilder, SimpleSelectQuery } from 'rawsql-ts'; // Import from rawsql-ts package
+import { SqlParamInjector, SqlFormatter, SelectQueryParser, QueryBuilder, SimpleSelectQuery } from 'rawsql-ts'; // Import from rawsql-ts package
 import { TodoSearchCriteria } from '../contracts/search-criteria';
 import { Todo, TodoDetail, TodoTableView, TodoStatus, TodoPriority } from '../domain/entities';
 import { getTableColumns, DATABASE_CONFIG } from './database-config';
-import { createJsonMapping } from './schema-definitions';
+import { buildTodoJsonQuery } from './todo-json-query';
 import { ITodoRepository, QueryBuildResult } from '../contracts/repository-interfaces';
 import { SqlLogger } from '../contracts/sql-logger';
 import { sqlLoader } from './sql-loader';
@@ -10,7 +10,7 @@ import { Pool, PoolClient } from 'pg';
 
 /**
  * RawSQL-based Todo repository implementation using rawsql-ts
- * Demonstrates PostgresJsonQueryBuilder and SqlParamInjector integration
+ * Demonstrates sample-owned PostgreSQL JSON projection and SqlParamInjector integration
  */
 export class RawSQLTodoRepository implements ITodoRepository {
     private pool: Pool;
@@ -19,7 +19,6 @@ export class RawSQLTodoRepository implements ITodoRepository {
     // Shared instances to avoid repeated instantiation
     private readonly sqlParamInjector: SqlParamInjector;
     private readonly sqlFormatter: SqlFormatter;
-    private readonly postgresJsonQueryBuilder: PostgresJsonQueryBuilder;
 
     constructor(
         enableDebugLogging: boolean = false,
@@ -31,14 +30,13 @@ export class RawSQLTodoRepository implements ITodoRepository {
         this.sqlLogger = sqlLogger;
 
         // Initialize shared instances once
-        this.sqlParamInjector = new SqlParamInjector(getTableColumns);
+        this.sqlParamInjector = new SqlParamInjector(getTableColumns, { allowAllUndefined: true });
 
         // Use custom SqlFormatter options for testing, default preset for production
         this.sqlFormatter = new SqlFormatter(
             sqlFormatterOptions || { preset: 'postgres' }
         );
 
-        this.postgresJsonQueryBuilder = new PostgresJsonQueryBuilder();
 
         // Load all SQL queries into memory cache for optimal performance
         sqlLoader.loadAllQueries();
@@ -69,17 +67,17 @@ export class RawSQLTodoRepository implements ITodoRepository {
     public convertToSearchState(criteria: TodoSearchCriteria): Record<string, any> {
         return {
             // Partial text matching: title -> LIKE '%value%'
-            title: criteria.title ? { like: `%${criteria.title}%` } : undefined,
+            'todo.title': criteria.title ? { like: `%${criteria.title}%` } : undefined,
 
             // Direct field mapping
-            status: criteria.status || undefined,
-            priority: criteria.priority || undefined,
+            'todo.status': criteria.status || undefined,
+            'todo.priority': criteria.priority || undefined,
 
             // Category color search - for joined category table
-            category_color: criteria.categoryColor || undefined,
+            'category.color': criteria.categoryColor || undefined,
 
             // Date range mapping: domain dates -> created_at with operators
-            created_at: (criteria.fromDate || criteria.toDate) ? {
+            'todo.created_at': (criteria.fromDate || criteria.toDate) ? {
                 ...(criteria.fromDate && { '>=': criteria.fromDate.toISOString() }),
                 ...(criteria.toDate && { '<=': criteria.toDate.toISOString() })
             } : undefined
@@ -133,8 +131,8 @@ export class RawSQLTodoRepository implements ITodoRepository {
     }
 
     /**
-     * Find todo by ID with related data using PostgresJsonQueryBuilder
-     * Demonstrates SqlParamInjector + PostgresJsonQueryBuilder integration
+     * Find todo by ID with related data using sample-owned PostgreSQL JSON projection
+     * Demonstrates SqlParamInjector + sample-owned PostgreSQL JSON projection integration
      */
     async findById(id: string): Promise<TodoDetail | null> {
         try {
@@ -176,29 +174,7 @@ export class RawSQLTodoRepository implements ITodoRepository {
         // Generate WHERE clause with SqlParamInjector
         const injectedQuery = this.sqlParamInjector.inject(baseSql, searchState) as SimpleSelectQuery;
 
-        // Build JSON query structure using flat mapping for TodoTableView (9 columns only)
-        const jsonMapping = {
-            rootName: "todo",
-            rootEntity: {
-                id: "todo",
-                name: "Todo",
-                columns: {
-                    "todo_id": "todo_id",
-                    "title": "title",
-                    "description": "description",
-                    "status": "status",
-                    "priority": "priority",
-                    "createdAt": "todo_created_at",     // Map to camelCase as per TodoTableView
-                    "updatedAt": "todo_updated_at",     // Map to camelCase as per TodoTableView
-                    "category_name": "category_name",   // Flattened from category
-                    "category_color": "category_color"  // Flattened from category
-                }
-            },
-            nestedEntities: [],
-            useJsonb: true,
-            resultFormat: "array" as const
-        };
-        const jsonQuery = this.postgresJsonQueryBuilder.buildJson(injectedQuery, jsonMapping);
+        const jsonQuery = buildTodoJsonQuery(injectedQuery, 'list');
 
         // Format and execute
         const { formattedSql, params } = this.sqlFormatter.format(jsonQuery);
@@ -284,7 +260,10 @@ export class RawSQLTodoRepository implements ITodoRepository {
         const baseSql = this.getBaseSqlForFindById();
 
         // step2. Generate WHERE clause with SqlParamInjector only
-        const searchState = { todo_id: parseInt(id) };
+        if (!/^\d+$/.test(id) || !Number.isSafeInteger(Number(id)) || Number(id) < 1) {
+            throw new Error('Todo ID must be a positive safe integer');
+        }
+        const searchState = { 'todo.todo_id': Number(id) };
         const injectedQuery = this.sqlParamInjector.inject(baseSql, searchState) as SimpleSelectQuery;
 
         return injectedQuery;
@@ -292,21 +271,20 @@ export class RawSQLTodoRepository implements ITodoRepository {
 
     /**
      * Step 2: Apply JSON transformations to base SQL (Testing Phase 2)
-     * Tests only PostgresJsonQueryBuilder functionality in isolation
+     * Tests only sample-owned PostgreSQL JSON projection functionality in isolation
      * @param baseQuery - SimpleSelectQuery without JSON transformations
      * @returns SimpleSelectQuery with JSON aggregations applied
      */
     public applyJsonTransformationsForFindById(baseQuery: SimpleSelectQuery): SimpleSelectQuery {
-        // step3. Build JSON query structure using unified schema (PostgresJsonQueryBuilder only)
-        const jsonMapping = createJsonMapping('todo');
-        const jsonQuery = this.postgresJsonQueryBuilder.buildJson(baseQuery, jsonMapping);
+        // step3. Build JSON query structure using unified schema (sample-owned PostgreSQL JSON projection only)
+        const jsonQuery = buildTodoJsonQuery(baseQuery, 'detail');
 
         return jsonQuery;
     }
 
     /**
      * Generate complete SQL query for findById operation (Complete Pipeline)
-     * Combines SqlParamInjector + PostgresJsonQueryBuilder for production use
+     * Combines SqlParamInjector + sample-owned PostgreSQL JSON projection for production use
      * @param id - Todo ID to search for
      * @returns Generated SQL query and parameters
      */

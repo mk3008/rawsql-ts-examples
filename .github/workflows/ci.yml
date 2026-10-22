@@ -16,6 +16,19 @@ jobs:
       fail-fast: false
       matrix:
         node: ['22.23.4', '24.22.1']
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: infrastructure_demo
+          POSTGRES_USER: demo_user
+          POSTGRES_PASSWORD: demo_password
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U demo_user -d infrastructure_demo"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://demo_user:demo_password@localhost:5433/infrastructure_demo
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -33,10 +46,9 @@ jobs:
         working-directory: infrastructure-layer-demo
       - name: Generate Prisma client explicitly (no database writes)
         run: npm run prisma:generate --workspace=infrastructure-layer-demo
-        env:
-          DATABASE_URL: postgresql://sample:sample@localhost:5432/sample
       - run: npm run build
       - run: npm test
-        if: ${{ !cancelled() }}
+      - run: npm run test:database --workspace=infrastructure-layer-demo
       - run: npm run demo:appendJoin --workspace=basic-examples
-        if: ${{ !cancelled() }}
+      - run: node basic-examples/dist/appendJoin/index.js
+      - run: npm run demo:formatter --workspace=basic-examples
