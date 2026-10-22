@@ -1,7 +1,7 @@
 -- Find todo by ID with all related data (categories and comments)
 -- Used in: findById
 -- Note: WHERE clause for todo_id is dynamically injected by SqlParamInjector
--- Note: This query is processed by PostgresJsonQueryBuilder for JSON aggregation
+-- Note: This query is processed by PostgreSQL JSON projection for JSON aggregation
 
 SELECT 
     t.todo_id, t.title, t.description, t.status, t.priority,

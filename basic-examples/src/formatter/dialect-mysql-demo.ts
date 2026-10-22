@@ -3,7 +3,7 @@
 // 2. Run the following command:
 //    npx ts-node demo/formatter/dialect-mysql-demo.ts
 
-import { SelectQueryParser, Formatter } from 'rawsql-ts';
+import { SelectQueryParser, SqlFormatter } from 'rawsql-ts';
 
 // Parameterized query written in MySQL dialect
 const sql = 'select `user_id`, `name` from `users` where `active` = ?';

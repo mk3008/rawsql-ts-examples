@@ -1,7 +1,7 @@
 import { SchemaManager, TableDefinition } from 'rawsql-ts';
 
 /**
- * Migrated schema definitions using rawsql-ts SchemaManager
+ * Physical schema definitions using rawsql-ts SchemaManager
  * This replaces the local unified-schema.ts with library-based implementation
  */
 
@@ -16,8 +16,8 @@ export const todoTableDef: TableDefinition = {
         status: { name: 'status' },
         priority: { name: 'priority' },
         category_id: { name: 'category_id' },
-        created_at: { name: 'created_at', jsonAlias: 'todo_created_at' },
-        updated_at: { name: 'updated_at', jsonAlias: 'todo_updated_at' }
+        created_at: { name: 'created_at' },
+        updated_at: { name: 'updated_at' }
     },
     relationships: [
         { type: 'object', table: 'category', propertyName: 'category' },
@@ -29,10 +29,10 @@ export const categoryTableDef: TableDefinition = {
     name: 'category',
     columns: {
         category_id: { name: 'category_id', isPrimaryKey: true },
-        name: { name: 'name', jsonAlias: 'category_name' },
-        description: { name: 'description', jsonAlias: 'category_description' },
-        color: { name: 'color', jsonAlias: 'category_color' },
-        created_at: { name: 'created_at', jsonAlias: 'category_created_at' }
+        name: { name: 'name' },
+        description: { name: 'description' },
+        color: { name: 'color' },
+        created_at: { name: 'created_at' }
     }
 };
 
@@ -40,10 +40,10 @@ export const todoCommentTableDef: TableDefinition = {
     name: 'todo_comment',
     columns: {
         todo_comment_id: { name: 'todo_comment_id', isPrimaryKey: true },
-        todo_id: { name: 'todo_id', jsonAlias: 'comment_todo_id' },
-        content: { name: 'content', jsonAlias: 'comment_content' },
-        author_name: { name: 'author_name', jsonAlias: 'comment_author_name' },
-        created_at: { name: 'created_at', jsonAlias: 'comment_created_at' }
+        todo_id: { name: 'todo_id' },
+        content: { name: 'content' },
+        author_name: { name: 'author_name' },
+        created_at: { name: 'created_at' }
     },
     relationships: [
         { type: 'object', table: 'todo', propertyName: 'todo' }
@@ -65,11 +65,4 @@ export const schemaManager = new SchemaManager({
  */
 export function getTableColumns(tableName: string): string[] {
     return schemaManager.getTableColumns(tableName);
-}
-
-/**
- * Create JSON mapping for PostgresJsonQueryBuilder (backward compatibility)
- */
-export function createJsonMapping(tableName: string) {
-    return schemaManager.createJsonMapping(tableName);
 }

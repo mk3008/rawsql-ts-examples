@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { join } from 'path';
+import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
     test: {
@@ -11,8 +11,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': join(__dirname, 'src'),
-            'rawsql-ts': join(__dirname, '../../'), // Point to parent rawsql-ts project
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
 });

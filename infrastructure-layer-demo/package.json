@@ -11,14 +11,15 @@
         "benchmark:list-search-js": "tsx src/demos/performance-benchmark/run-list-search-benchmark-js.ts",
         "test": "vitest --run",
         "test:watch": "vitest",
-        "build": "tsc",
+        "build": "tsc && node scripts/copy-sql.cjs",
         "prisma:generate": "prisma generate",
         "prisma:push": "prisma db push",
         "prisma:studio": "prisma studio",
         "prisma:migrate": "prisma migrate dev",
         "prisma:seed": "tsx prisma/seed.ts",
         "switch:dev": "npm install rawsql-ts@file:../../rawsql-ts",
-        "switch:stable": "npm install rawsql-ts@^0.10.0-beta"
+        "switch:stable": "npm install rawsql-ts@0.30.1",
+        "test:database": "node dist/test/database-roundtrip.js"
     },
     "keywords": [
         "rawsql-ts",
@@ -34,14 +35,14 @@
         "@types/pg": "^8.15.2",
         "benchmark": "^2.1.4",
         "pg": "^8.16.0",
-        "rawsql-ts": "file:../../rawsql-ts",
+        "rawsql-ts": "0.30.1",
         "tsx": "^4.0.0"
     },
     "devDependencies": {
-        "@types/node": "^20.0.0",
-        "@vitest/ui": "^3.1.4",
+        "@types/node": "^22.19.0",
+        "@vitest/ui": "^4.1.12",
         "prisma": "^5.22.0",
         "typescript": "^5.0.0",
-        "vitest": "^3.1.4"
+        "vitest": "^4.1.12"
     }
 }
